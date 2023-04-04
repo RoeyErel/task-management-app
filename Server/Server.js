@@ -3,14 +3,12 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cors from 'cors';
-
 import Todo from './models/Todo.js'
-//import productRoute from './routes/product.js'
 
 // configurations
 const app = express()
 dotenv.config();
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 
 //MIDDLEWARE
 app.use(express.json());
@@ -58,7 +56,7 @@ app.get('/todos/complete/:id', async (req, res) => {
 })
 
 app.get("/", (req, res) => {
-    res.send("TESTER");
+    res.send("Connected");
 });
 
 
