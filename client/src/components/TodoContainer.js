@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react'
-import {AiOutlineCheck, AiOutlineClose} from 'react-icons/ai'
+import {AiOutlineCheck, AiOutlineClose, AiOutlineClockCircle, AiOutlineLink} from 'react-icons/ai'
 import {TbCirclePlus} from 'react-icons/tb'
 import axios from 'axios'
 const TodoContainer = () => {
@@ -63,47 +63,25 @@ const TodoContainer = () => {
         
     }
 
-
-
     useEffect(() => {
         getTodos();
     },[todos])
+
     return (
-        <div id='Todo-container' className='flex flex-row justify-center items-center w-full'>
-            <div className='flex flex-col w-full'>
-                <div className='flex flex-row w-full h-full bg-black-200/40'>
+        <div id='Todo-container' className='flex flex-row justify-center items-center w-full h-[20%]'>
+            <div className='flex flex-col w-full h-full'>
+                <div className='flex flex-row w-full h-full bg-black-200/40 mb-1'>
                     <form onSubmit={addTodo} className='w-full h-full flex flex-row justify-start items-start'>
                         <div className='flex flex-col w-[90%]'>
-                            <input 
-                                ref={textRef} 
-                                className='border-[1px] border-black-50 w-full h-full bg-transparent focus:outline-none text-white pl-2 py-2' 
-                                onChange={handleInput}
-                                type='text'
-                                placeholder='Todo'
-                                name='text'
-                            />
-                            <div className='flex flex-row'>
-                                <input 
-                                    ref={ref} 
-                                    className='border-[1px] border-black-50 w-full h-full bg-transparent focus:outline-none text-white pl-2 py-2' 
-                                    onChange={handleInput}
-                                    type='time'
-                                    name='time'
-                                />
-                                <input 
-                                    ref={ref} 
-                                    className='border-[1px] border-black-50 w-full h-full bg-transparent focus:outline-none text-white pl-2 py-2' 
-                                    onChange={handleInput}
-                                    type='link'
-                                    placeholder='Link'
-                                    name='link'
-                                />  
+                            <input ref={textRef} className='border-[1px] border-black-50/60 w-full h-full bg-transparent focus:outline-none text-white pl-2 py-2 text-xl' onChange={handleInput}type='text'placeholder='Todo'name='text'/>
+                            <div className='flex flex-row w-full h-full'>
+                                <input ref={ref} className='w-[25%] sm:w-[50%] border-[1px] border-black-50/60 h-full bg-transparent focus:outline-none text-white pl-2 py-2 text-xl' onChange={handleInput}type='time'name='time'/>
+                                <input ref={ref} className='border-[1px] border-black-50/40 w-[75%] sm:w-[50% h-full bg-transparent focus:outline-none text-white pl-2 py-2 text-xl' onChange={handleInput}type='link'placeholder='Link'name='link'/>
                             </div>
-
                         </div>
-                        <div className='flex items-center justify-center w-[10%]'>
-                            <div className='h-full w-full flex justify-center items-center'>
-                                <button className='w-full h-full flex justify-center items-center'><TbCirclePlus className='text-4xl text-purple-600 hover:text-purple-700 cursor-pointer w-full h-full p-2'/></button>
+                        <div className='w-[10%] h-full'>
+                            <div className='h-[100%] w-full flex justify-center items-center'>
+                                <button className='w-full h-full flex justify-center items-center text-3xl cursor-default'><TbCirclePlus className='text-white hover:text-gray-300 cursor-pointer'/></button>
                             </div>
                         </div>
                     </form>
@@ -111,13 +89,19 @@ const TodoContainer = () => {
                 </div>
                 {
                 todos.map(todo => (
-                    <div className='flex flex-row w-full bg-black-200/40 my-2' key={todo._id} >
-                        <div className='w-full flex justify-start items-center pl-4'>
-                            <p className={'text-white md:text-[20px] text-[25px] font-thin' + (todo.complete ? "text-white font-thin line-through": "text-white font-thin")}>{todo.text}</p>
+                    <div className='flex flex-row w-full bg-black-200/40 my-1' key={todo._id} >
+                        <div className='w-full flex sm:flex-col justify-between items-center px-4 md:px-2'>
+                            <div className='flex justify-start sm:justify-center items-center w-full'>
+                                <p className={'text-white md:text-[18px] text-[22px] sm:text-[18px] font-thin flex justify-center items-center' + (todo.complete ? "text-white font-thin line-through": "text-white font-thin")}>{todo.text}</p>
+                            </div>
+                            <div className='flex justify-end sm:justify-center items-center w-full'>
+                                {todo.link?<a  className='text-white flex justify-center items-center text-[18px] md:text-[16px] sm:text-[15px] ' rel="noreferrer" target="_blank"  href={'https://'+(todo.link)}><AiOutlineLink className='mx-1'/>Link</a> : null}
+                                <p className='text-white flex justify-end items-center pl-4 text-[18px] md:text-[16px] sm:text-[15px] '><AiOutlineClockCircle className='mx-1'/>{todo.time}</p>
+                            </div>
                         </div>
                         <div className='flex items-center justify-center pr-0 py-2'>
-                            <button className='flex items-center justify-center py-1 px-1 md:h-[20px] cursor-pointer rounded-md text-white font-thin w-[50px] h-[28px] mx-2 bg-gradient-to-br from-green-600 via-green-500 to-green-600 hover:bg-gradient-to-br hover:from-green-600 hover:via-green-400 hover:to-green-600' onClick={() => completeTodo(todo._id)}><AiOutlineCheck/></button>
-                            <button className='flex items-center justify-center py-1 px-1 md:h-[20px] cursor-pointer rounded-md text-white font-thin w-[50px] h-[28px] mx-2 bg-gradient-to-br from-orange-600 via-red-600 to-orange-600 hover:bg-gradient-to-br hover:from-red-600 hover:via-red-500 hover:to-red-600' onClick={() => removeTodo(todo._id)}><AiOutlineClose/></button>
+                            <button className='flex items-center justify-center py-1 px-1 md:px-1 md:h-[20px] cursor-pointer rounded-md text-white font-thin w-[50px] sm:w-[30px] md:w-[30px] h-[28px] mx-2 md:mx-[2px] bg-gradient-to-br from-green-600 via-green-500 to-green-600 hover:bg-gradient-to-br hover:from-green-600 hover:via-green-400 hover:to-green-600' onClick={() => completeTodo(todo._id)}><AiOutlineCheck/></button>
+                            <button className='flex items-center justify-center py-1 px-1 md:px-1 md:h-[20px] cursor-pointer rounded-md text-white font-thin w-[50px] sm:w-[30px] md:w-[30px] h-[28px] mx-2 md:mx-[2px] md:mr-1 bg-gradient-to-br from-orange-600 via-red-600 to-orange-600 hover:bg-gradient-to-br hover:from-red-600 hover:via-red-500 hover:to-red-600' onClick={() => removeTodo(todo._id)}><AiOutlineClose/></button>
                         </div>
                     </div>
                 ))}
