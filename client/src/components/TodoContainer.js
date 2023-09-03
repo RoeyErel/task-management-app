@@ -3,11 +3,12 @@ import {AiOutlineCheck, AiOutlineClose, AiOutlineClockCircle, AiOutlineLink} fro
 import {TbCirclePlus} from 'react-icons/tb'
 import axios from 'axios'
 const TodoContainer = () => {
+    const [todo, setTodo] = useState({text:"", time:"", link:""})
     const [todos, setTodos] = useState([]);
+    const [newLink, setNewLink] = useState("")
     const ref = useRef(null);
     const textRef = useRef(null)
-    const [todo, setTodo] = useState({text:"", time:"", link:""})
-    
+
     const handleInput = (e) => {
         setTodo({
             ...todo,
@@ -30,7 +31,6 @@ const TodoContainer = () => {
               });
         }catch(error){
             console.log(error)
-            console.log(todo)
         }
     
     }
@@ -42,7 +42,23 @@ const TodoContainer = () => {
                 setTodos(data)})
             .catch(err => console.error("error: ", err));
     }
-    
+
+    const editLink = async (e, id, link) => {
+        e.preventDefault()
+        try{
+            await axios.post(process.env.REACT_APP_BASE_URL + "/api/todos/editLink/" + id,{
+                link: link
+            })
+            .then((response) => {
+                console.log(response);
+              });
+        }catch(err){
+            console.error(err)
+        }
+        
+        
+    }
+    //edit time
     const completeTodo = async id => {
         const data = await fetch(process.env.REACT_APP_BASE_URL + "/api/todos/complete/" + id)
         .then(res => res.json());
@@ -60,7 +76,6 @@ const TodoContainer = () => {
             .then(res => res.json());
         
         setTodos(todos => todos.filter(todo => todo._id !== data._id));
-        
     }
 
     useEffect(() => {
@@ -73,10 +88,10 @@ const TodoContainer = () => {
                 <div className='flex flex-row w-full h-full bg-black-200/40 mb-1'>
                     <form onSubmit={addTodo} className='w-full h-full flex flex-row justify-start items-start'>
                         <div className='flex flex-col w-[90%]'>
-                            <input ref={textRef} className='border-[1px] border-black-50/60 w-full h-full bg-transparent focus:outline-none text-white pl-2 py-2 text-xl' onChange={handleInput}type='text'placeholder='Todo'name='text'/>
+                            <input name='text' required ref={textRef} className='border-[1px] border-black-50/60 w-full h-full bg-transparent focus:outline-none text-white pl-2 py-2 text-xl' onChange={handleInput} type='text' placeholder='Todo'/>
                             <div className='flex flex-row w-full h-full'>
-                                <input ref={ref} className='w-[25%] sm:w-[50%] border-[1px] border-black-50/60 h-full bg-transparent focus:outline-none text-white pl-2 py-2 text-xl' onChange={handleInput}type='time'name='time'/>
-                                <input ref={ref} className='border-[1px] border-black-50/40 w-[75%] sm:w-[50% h-full bg-transparent focus:outline-none text-white pl-2 py-2 text-xl' onChange={handleInput}type='link'placeholder='Link'name='link'/>
+                                <input name='time' required ref={ref} className='w-[25%] sm:w-[50%] border-[1px] border-black-50/60 h-full bg-transparent focus:outline-none text-white pl-2 py-2 text-xl' onChange={handleInput} type='time'/>
+                                <input name='link' ref={ref} className='border-[1px] border-black-50/40 w-[75%] sm:w-[50% h-full bg-transparent focus:outline-none text-white pl-2 py-2 text-xl' onChange={handleInput} type='link' placeholder='Link'/>
                             </div>
                         </div>
                         <div className='w-[10%] h-full'>
@@ -87,15 +102,27 @@ const TodoContainer = () => {
                     </form>
 
                 </div>
-                {
-                todos.map(todo => (
+                
+                {todos.map(todo => (
                     <div className='flex flex-row w-full bg-black-200/40 my-1' key={todo._id} >
-                        <div className='w-full flex sm:flex-col justify-between items-center px-4 md:px-2'>
-                            <div className='flex justify-start sm:justify-center items-center w-full'>
+                        <div className='w-full flex sm:flex-col justify-between items-center px-2 md:px-2'>
+                            <div className='flex justify-start sm:justify-center items-center w-[75%]'>
                                 <p className={'text-white md:text-[18px] text-[22px] sm:text-[18px] font-thin flex justify-center items-center' + (todo.complete ? "text-white font-thin line-through": "text-white font-thin")}>{todo.text}</p>
                             </div>
-                            <div className='flex justify-end sm:justify-center items-center w-full'>
-                                {todo.link?<a  className='text-white flex justify-center items-center text-[18px] md:text-[16px] sm:text-[15px] ' rel="noreferrer" target="_blank"  href={'https://'+(todo.link)}><AiOutlineLink className='mx-1'/>Link</a> : null}
+                            <div className='flex justify-end sm:justify-center items-center w-[25%]'>
+                                <button className='flex justify-center items-center'>
+                                    {todo.link?
+                                        <div className='flex justify-center items-center'>
+                                            <AiOutlineLink className='mx-1 text-white text-[18px] md:text-[16px] sm:text-[15px]'/>
+                                            <a className='text-white flex justify-center items-center text-[18px] md:text-[16px] sm:text-[15px] ' rel="noreferrer" target="_blank" href={'https://'+(todo.link)}>Link</a>
+                                        </div>
+                                    :
+                                        <div className='flex justify-center items-center'>
+                                            <AiOutlineLink onClick={(e) => editLink(e, todo._id, newLink)} className='mx-1 text-white text-[18px] md:text-[16px] sm:text-[15px]'/>
+                                            <input onChange={(e)=> setNewLink(e.target.value)} className='w-10 pl-1 bg-transparent flex justify-center items-center text-white text-[18px] md:text-[16px] sm:text-[15px]' placeholder='Edit'/>
+                                        </div>
+                                    } 
+                                </button>
                                 <p className='text-white flex justify-end items-center pl-4 text-[18px] md:text-[16px] sm:text-[15px] '><AiOutlineClockCircle className='mx-1'/>{todo.time}</p>
                             </div>
                         </div>
@@ -105,7 +132,7 @@ const TodoContainer = () => {
                         </div>
                     </div>
                 ))}
-                </div>
+            </div>
         </div>
   )
 }

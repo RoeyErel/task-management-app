@@ -41,3 +41,8 @@ export const completeTodo = asynchandler (async (req, res)=>{
     todo.save();
     res.json(todo);
 })
+
+export const editLink = asynchandler (async (req, res)=>{
+    await Todo.updateOne({ _id : req.params.id }, { link: req.body.link });
+    res.json("succese")
+})

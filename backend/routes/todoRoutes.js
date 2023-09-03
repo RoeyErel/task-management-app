@@ -10,5 +10,6 @@ router.post('/todos/new', userController.newTodo)
 router.delete('/todos/delete/:id', userController.deleteTodo)
 router.get('/todos', userController.listTodos)
 router.get('/todos/complete/:id', userController.completeTodo)
+router.post('/todos/editLink/:id', userController.editLink)
 
 export default router;
