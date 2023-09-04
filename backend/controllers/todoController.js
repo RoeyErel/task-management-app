@@ -3,10 +3,13 @@ import Todo from '../models/Todos.js'
 
 
 export const newTodo = asynchandler (async (req, res)=> {
-    const {text, time, link} = req.body
+    var {text, time, link} = req.body
     if(!text || !time){
         res.status(400)
         throw new Error('please add text and time to Todo')
+    }
+    if(!link.includes('https://')){
+        link = 'https://'+link
     }
     const todo = await Todo.create({
         text,

@@ -81,12 +81,12 @@ const TodoContainer = () => {
     useEffect(() => {
         getTodos();
     },[todos])
-
+    
     return (
         <div id='Todo-container' className='flex flex-row justify-center items-center w-full h-[20%]'>
             <div className='flex flex-col w-full h-full'>
-                <div className='flex flex-row w-full h-full bg-black-200/40 mb-1'>
-                    <form onSubmit={addTodo} className='w-full h-full flex flex-row justify-start items-start'>
+                <div className='flex flex-row w-full bg-black-200/40 mb-1'>
+                    <form onSubmit={addTodo} className='w-full flex flex-row justify-start items-start'>
                         <div className='flex flex-col w-[90%]'>
                             <input name='text' required ref={textRef} className='border-[1px] border-black-50/60 w-full h-full bg-transparent focus:outline-none text-white pl-2 py-2 text-xl' onChange={handleInput} type='text' placeholder='Todo'/>
                             <div className='flex flex-row w-full h-full'>
@@ -96,11 +96,12 @@ const TodoContainer = () => {
                         </div>
                         <div className='w-[10%] h-full'>
                             <div className='h-[100%] w-full flex justify-center items-center'>
-                                <button className='w-full h-full flex justify-center items-center text-3xl cursor-default'><TbCirclePlus className='text-white hover:text-gray-300 cursor-pointer'/></button>
+                                <button className='w-full h-full flex justify-center items-center text-3xl cursor-default'>
+                                    <TbCirclePlus className='text-white hover:text-gray-300 cursor-pointer'/>
+                                </button>
                             </div>
                         </div>
                     </form>
-
                 </div>
                 
                 {todos.map(todo => (
@@ -114,7 +115,7 @@ const TodoContainer = () => {
                                     {todo.link?
                                         <div className='flex justify-center items-center'>
                                             <AiOutlineLink className='mx-1 text-white text-[18px] md:text-[16px] sm:text-[15px]'/>
-                                            <a className='text-white flex justify-center items-center text-[18px] md:text-[16px] sm:text-[15px] ' rel="noreferrer" target="_blank" href={'https://'+(todo.link)}>Link</a>
+                                            <a className='text-white flex justify-center items-center text-[18px] md:text-[16px] sm:text-[15px] ' rel="noreferrer" target="_blank" href={(todo.link)}>Link</a>
                                         </div>
                                     :
                                         <div className='flex justify-center items-center'>
